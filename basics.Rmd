@@ -1,5 +1,7 @@
 ---
+layout: page
 title: "RMarkdown Basics"
+permalink: /materials/basics/
 author: "Péter Jeszenszky"
 date: '`r Sys.Date()`'
 bibliography: My Collection.bib
