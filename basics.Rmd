@@ -1,0 +1,307 @@
+---
+title: "RMarkdown Basics"
+author: "Péter Jeszenszky"
+date: '`r Sys.Date()`'
+bibliography: My Collection.bib
+output: 
+  html_document:
+    theme: readable # how it should look
+    code_folding: show #makes it possible to hide the code
+    fig_crop: true
+    fig_caption: true
+#    latex_engine: pdflatex
+    fig_width: 13 # document wide default figure size
+    fig_height: 9
+    toc: true # table of content
+    toc_depth: 4
+    number_section: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+**Links to the other two parts of the workshop:**  
+`ggplot2` notes: https://verticalmeadows.github.io/ggplot_basics.html  
+Introduction to `ggmap`: https://verticalmeadows.github.io/ggmap_basics.html
+
+
+# This is the output of an R Markdown script
+_One kind out of many._
+
+# Why R Markdown
+*	It makes reproducible documents. Think about how your workflow is, before you publish something. How many times have you run your script or plotted the same or similar graph  
+    +	You’ll have to redo it a lot, and then maybe even change results in your reports, especially if there was a mistake or in case you remove/add more data  
+*	You want your research to be followable or redoable by peers, good journals also ask for a reproducible analysis.  
+*	You should also do yourself the favour and document your code properly, including your graphs and how they were made, how one can produce them differently (which you don’t necessarily want to show the world but you want to have for yourself, close to the public code), , with different data etc. 
+    + It helps future research, you learn from it and when you return to your script after 2 years at the end of your PhD or because you need something for teaching it won’t take 2 days just to understand what you did back then.  
+
+## Advantages:
+
+*	Include code (R, Python, even more) and text in the same document  
+    +	Multiple levels of commenting (sorry, no footnotes or bubbles, unless you produce a pdf;) )  
+*	Output in many different formats (html, word, powerpoint, pdf, LaTeX)  
+    +	“Knit”, i.e. reproduce the output anytime  
+    +	Include or hide any part you want in the final product  
+*	Put references in your document, and have a bibliography with it 
+*	Use it with versioning tools such as Git  
+
+
+
+# Working with R Markdown
+
+## How to start
+
+Let's go back to RStudio and open a new R Markdown document.
+
+![](pics/startRMarkdown.png)
+From https://oliviergimenez.github.io/intro_rmarkdown/#13 
+
+An R Markdown script contains three different parts
+
+- Front Matter
+- Markdown content
+- Code chunks
+
+All of them use different programming languages on their own, but you don't have to know a lot about them to get going with R Markdown.
+
+## Front Matter 
+Made with the YAML language.
+
+Essentially here is where you set default values for the looks of the whole document.  
+  
+![](pics/FrontMatter.png)
+
+
+## Markdown content
+Markdown is also a language on its own, but it can serve as glue between different other languages that result in the document created.
+Let's list what it can do, cover how to control the looks.
+
+This command inserts the image that you see now
+![](pics/markdownContent.png)
+
+This is a paragraph.
+You need two spaces at the end to end a paragraph. (I didn't put two spaces at the end of 'This is a paragraph.')
+
+- This is a list
+- You can either use hyphens, as in the image above
+    - or stars(*),
+    - but then you need to use pluses (+) for sub-items
+- Press Tab twice before writing the sign to get a sub-item, and don't forget to add two spaces at the end of each item and sub-item
+- There are two ways to produce _italics_ and __bold__
+    - This works the same way, *italics* and **bold**
+
+# Header 1
+## Header 2
+### Header 3
+#### Header 4
+##### Header 5
+###### Header 6
+
+***
+
+Code in line `3+2` But it only looks like a code.   
+Executable code in line `r 3+2` The code is actually executed when **r** is inserted.
+ 
+Equations in line with LaTex syntax: $D_{ij}^{ling}=\frac{\sum D_Q}{n}$  Make sure not to put a space within the equation
+
+> “Everything is related to everything else, but near things are more related than distant things” 
+
+@Tobler1970
+
+A Simple Table | Has headers
+-------------- | -----------
+It is inconvenient | And doesn't look good in the script
+But there is a solution | !!!
+
+Writing `[link](https://verticalmeadows.github.io/ggplot_basics.html)` without back ticks produces a [link](https://verticalmeadows.github.io/ggplot_basics.html)  
+Besides `<https://verticalmeadows.github.io/ggplot_basics.html>` produces a link as well, <https://verticalmeadows.github.io/ggplot_basics.html> highlighting the actual text of the hyperlink in the script more.  
+Without anything added, web links are still recognised.
+https://verticalmeadows.github.io/ggplot_basics.html
+
+Colouring text is also possible, but it needs a bit more tweaking.
+
+    Two tabs in a new line convert it into a highlighted text.
+
+`<!--This text is commented out, thus not visible below -->`
+<!--
+This text is commented out
+-->
+
+## Code chunks
+
+Code chunks are named, easily navigable and collapsible in Rstudio.
+
+![](pics/chunknavigation.png)
+
+You can document your code chunks in the Markdown content.  
+As you see, it is much more easily readable than the comments in code.
+
+```{r print}
+# This is a comment in the code chunk
+print("This is a code chunk above, and I'm the output.")
+```
+
+![](pics/chunkreference.png) 
+
+
+
+Let's use the next chunk to write a custom function to colorize text
+
+```{r colorizeText}
+# https://bookdown.org/yihui/rmarkdown-cookbook/font-color.html 
+colorize <- function(x, color) {
+  if (knitr::is_latex_output()) {
+    sprintf("\\textcolor{%s}{%s}", color, x)
+  } else if (knitr::is_html_output()) {
+    sprintf("<span style='color: %s;'>%s</span>", color, 
+      x)
+  } else x
+}
+```
+```r colorize("some words in red", "red")``` using only one "`" around them produces  
+`r colorize("some words in red", "red")`
+
+When you write your `R` code as an `Rmd`, the code is automatically wrapped in RStudio, unlike in  usual `r.` files.
+
+### Visual control
+**By default, markdown includes both the code, and the output**
+
+You can decide:  
+
+- what is visible only in the script, 
+- what is visible into the published document,
+- what code gets actually executed at all (e.g. you don't want your faulty test codes to break the production of your document)
+- Hide/Show feature in the html produced
+
+You can specify the size (in inches) of the output figures in the code chunks' arguments.
+`{r easyhist, echo=FALSE, fig.width=3, fig.height=5}`  
+Notice that we don't see the code here, only the output.
+
+```{r easyhist, echo=FALSE, fig.width=3, fig.height=5}
+hist(cars$dist)
+
+```
+
+`message = FALSE` prevents messages from appearing in output (such as the messages a library() command produces). Besides, `warning=FALSE` mutes warnings, such as certain data points missing from a plot.  
+
+Use `knitr::opts_chunk$set(echo = FALSE)` to make your choice default if you use them a lot.  
+You may overwrite the default for each chunk
+
+Refer to all chunk options: [https://yihui.name/knitr/options/](https://yihui.name/knitr/options/)
+
+
+
+
+# Plotting some results
+Plot equations as standalones in the markdown content:  
+
+$$E=mc^{2}$$
+
+
+Let's plot good looking tables called __kables__.
+
+```{r tablePlot}
+library(tidyverse)
+sdatsToPlot <- read.csv("sdats_99.csv", header = T, stringsAsFactors = F)
+
+  knitr::kable(sdatsToPlot[1:5,6:8], format = "html", caption = "A kable table")
+```
+
+More options at <https://bookdown.org/yihui/rmarkdown-cookbook/kable.html>  
+`kableExtra` is yet another extension to its capabilities: https://bookdown.org/yihui/rmarkdown-cookbook/kableextra.html  
+`kables` can do more, but the package `DT` provides even nicer tables.  
+It is an R interface to the JavaScript library DataTables. 
+
+One can even make these **datatables**  
+- searchable  
+- filterable by coloumns  
+- editable  
+- manipulate its appearance  
+- rename rows and coloumns for the display  
+- add captions  
+- sketch a custom table container using `htmltools`  
+Discover its main reference <https://rstudio.github.io/DT/>  
+
+```{r tablePlot2}
+library(DT)
+
+options(DT.options = list(pageLength = 10))
+datatable(sdatsToPlot[1:30,25:27]) %>%
+    formatRound(1:ncol(sdatsToPlot[1:30,25:27]), digits=4)
+```  
+
+Check out a real plot.
+
+```{r lawyerConditionalInferenceTree, fig.width=13, fig.height=8}
+
+lawyer_data<-read.csv("lawyer_data.csv",header=T, stringsAsFactors = T)
+#Inspect data to see factors
+#str(lawyer_data)
+#names(lawyer_data)
+
+#Load libraries for building CI tress and RFs
+library(party)
+library(randomForestSRC)
+library(ggRandomForests)
+
+#Start with CI tree
+lawyer.ct = 
+  ctree(eval_answer_overall~question+
+            speaker+
+            accent+
+            quality+
+            mcpr3+
+            P_gender+
+            P_age+
+            P_year_in_law+
+            P_region+
+            P_parentsOcc,
+          data=lawyer_data)
+lawyer.ct
+plot(lawyer.ct)
+```
+
+
+
+## Plotting side by side
+
+```{r figuresSide, figures-side, fig.show="hold", out.width="50%"}
+#par(mar = c(4, 4, .1, .1))
+plot(cars$speed, cars$dist)
+plot(mpg ~ hp, data = mtcars, pch = 19)
+```
+
+`fig.show` is the key here. If `="hide"`, knitr will generate the plots created in the chunk, but not include them in the final document. If `fig.show="hold"`', knitr will delay displaying the plots created by the chunk until the end of the chunk. If `fig.show="animate"`, knitr will combine all of the plots created by the chunk into an **animation**!
+
+# Production
+
+What can be produced: <https://oliviergimenez.github.io/intro_rmarkdown/#47>  
+
+If we produce a html, we can give it a custom `.css` stylesheet (Cascading Stylesheet). <https://bootswatch.com/>  
+Further themes: <https://www.datadreaming.org/post/r-markdown-theme-gallery/>  
+There are also LaTeX and Word templates.   
+
+Managing the bibliography: <https://oliviergimenez.github.io/intro_rmarkdown/#52>  
+
+R Markdown is useful for many other things beyond documents. Check out the gallery: <https://rmarkdown.rstudio.com/gallery.html>
+
+***
+
+These notes are mainly based on:  
+<https://oliviergimenez.github.io/intro_rmarkdown/>  
+<https://yongfu.name/2019-fju-rmd-talk/slide/#1>  
+
+Special Thanks to Erez Levon for some of the data.  
+
+## Further readings
+
+Getting started: https://www.dataquest.io/blog/r-markdown-guide-cheatsheet/  
+Reference guide for R Markdown: https://rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf  
+Bookdown: Writing professional technical documents with R Markdown: https://bookdown.org/yihui/bookdown/  
+R Markdown Cookbook: https://bookdown.org/yihui/rmarkdown-cookbook/  
+Add citations and cross-references: https://www.earthdatascience.org/courses/earth-analytics/document-your-science/add-citations-to-rmarkdown-report/  
+Advanced Image Processing for your html output, with package 'magick': https://cran.r-project.org/web/packages/magick/vignettes/intro.html
+
+# References 
+They appear at the and of the code based on the bibliography file provided.
