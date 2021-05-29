@@ -21,6 +21,10 @@ Syntax highlighted code block
 1. Numbered
 2. List
 
+**Links to the other two parts of the workshop:**  
+Introduction to `R Markdown`: [Basics]https://verticalmeadows.github.io/basics.html  
+Introduction to `ggmap`: [ggmap]https://verticalmeadows.github.io/ggmap_basics.html
+
 **Bold** and _Italic_ and `Code` text
 
 [Link](url) and ![Image](src)
